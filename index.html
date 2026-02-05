@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>San Valentín</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at bottom, #0b132b, #000);
+}
+
+/* Estrellas */
+body::before {
+    content:"";
+    position: fixed;
+    width:200%;
+    height:200%;
+    background:
+      radial-gradient(2px 2px at 50px 100px, white, transparent),
+      radial-gradient(2px 2px at 200px 300px, white, transparent),
+      radial-gradient(1px 1px at 400px 200px, white, transparent),
+      radial-gradient(2px 2px at 600px 500px, white, transparent);
+    animation: estrellas 30s linear infinite;
+}
+@keyframes estrellas {
+    from {transform: translateY(0);}
+    to {transform: translateY(-600px);}
+}
+
+/* TARJETAS */
+.card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    width: 420px;
+    box-shadow: 0 0 20px rgba(255,255,255,0.3);
+    z-index: 2;
+}
+
+#carta {
+    display:none;
+    background: #f5deb3;
+    background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+    border: 8px solid #c2a26b;
+    box-shadow: 0 0 30px rgba(255,255,255,0.5);
+}
+
+/* TEXTO */
+h1 { color:#ff4b5c; }
+p { font-size:18px; }
+
+/* BOTONES */
+.buttons {
+    display:flex;
+    justify-content: space-around;
+    margin-top:20px;
+}
+
+button {
+    padding:15px 30px;
+    border:none;
+    border-radius:30px;
+    font-size:18px;
+    cursor:pointer;
+}
+
+#siBtn { background:#ff4b5c; color:white; }
+#noBtn { background:#aaa; color:white; position:absolute; }
+
+/* FOTO */
+#fotoFinal img {
+    width:100%;
+    border-radius:15px;
+}
+
+/* CORAZONES */
+.heart {
+    position: fixed;
+    bottom: -10px;
+    color:red;
+    animation: flotar 6s linear forwards;
+}
+@keyframes flotar {
+    to {transform: translateY(-100vh); opacity:0;}
+}
+
+/* CONFETI */
+.confetti {
+    position: fixed;
+    top:-10px;
+    animation: caer 4s linear forwards;
+}
+@keyframes caer {
+    to {transform: translateY(100vh) rotate(360deg); opacity:0;}
+}
+
+/* CONTADOR DIGITAL */
+#contador {
+    font-family: "Courier New", monospace;
+    font-size: 22px;
+    background: black;
+    color: #00ffcc;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<audio autoplay loop>
+  <source src="https://www.mfiles.co.uk/mp3-downloads/sweet-child-o-mine.mp3">
+</audio>
+
+<audio id="beso">
+  <source src="https://www.soundjay.com/human/kiss-1.mp3">
+</audio>
+
+<div class="card" id="principal">
+<h1>💖 Mi amor 💖</h1>
+<p>No quiero flores ni chocolates.<br>
+Quiero reír contigo, caminar contigo<br>
+y seguir construyendo momentos contigo.</p>
+
+<p>Con todo mi corazón,<br><strong>Tu futuro esposo</strong> te pregunta:</p>
+<p><strong>¿Aceptas ser mi San Valentín?</strong></p>
+
+<div class="buttons">
+    <button id="siBtn" onclick="aceptar()">Sí, acepto 💕</button>
+    <button id="noBtn" onmouseover="moverNo()" onclick="castigo()">No acepto 😢</button>
+</div>
+</div>
+
+<div class="card" id="carta">
+<h1>💌 Gracias por decir que sí, mi preciosa 💖</h1>
+<p>
+Prometo cuidarte, respetarte y hacerte sonreír.<br>
+Gracias por ser parte de mi vida.<br>
+Este 14 de febrero es nuestro… y todos los que vienen también.
+</p>
+
+<div id="fotoFinal">
+    <img src="AMOR.jpeg">
+</div>
+
+<div id="contador"></div>
+</div>
+
+<script>
+let escala=1;
+const frases=["¿Segura? 😏","No huyas del amor 💘","Eso dolió 😢","Piénsalo bien 👀","El destino ya decidió 💕"];
+
+function aceptar(){
+    document.getElementById("principal").style.display="none";
+    document.getElementById("carta").style.display="block";
+    document.getElementById("noBtn").style.display="none";
+    document.getElementById("beso").play();
+    lanzarConfeti();
+}
+
+function moverNo(){
+    const no=document.getElementById("noBtn");
+    no.style.left=Math.random()*(window.innerWidth-no.offsetWidth)+"px";
+    no.style.top=Math.random()*(window.innerHeight-no.offsetHeight)+"px";
+    no.textContent=frases[Math.floor(Math.random()*frases.length)];
+}
+
+function castigo(){
+    escala+=0.2;
+    document.getElementById("siBtn").style.transform="scale("+escala+")";
+}
+
+/* corazones */
+setInterval(()=>{
+ const h=document.createElement("div");
+ h.className="heart";
+ h.textContent="❤️";
+ h.style.left=Math.random()*100+"vw";
+ h.style.fontSize=(Math.random()*20+10)+"px";
+ document.body.appendChild(h);
+ setTimeout(()=>h.remove(),6000);
+},500);
+
+/* contador digital */
+const fecha=new Date("February 14, 2026 00:00:00").getTime();
+setInterval(()=>{
+ const ahora=new Date().getTime();
+ const d=fecha-ahora;
+ document.getElementById("contador").innerHTML=
+ "⏳ "+Math.floor(d/(1000*60*60*24))+"d "+
+ Math.floor((d%(1000*60*60*24))/(1000*60*60))+"h "+
+ Math.floor((d%(1000*60*60))/(1000*60))+"m "+
+ Math.floor((d%(1000*60))/1000)+"s";
+},1000);
+
+/* confeti */
+function lanzarConfeti(){
+ for(let i=0;i<50;i++){
+   const c=document.createElement("div");
+   c.className="confetti";
+   c.textContent="🎉";
+   c.style.left=Math.random()*100+"vw";
+   document.body.appendChild(c);
+   setTimeout(()=>c.remove(),4000);
+ }
+}
+</script>
+
+</body>
+</html>
